@@ -1,35 +1,52 @@
-import styles from './page.module.css';
 import Image from 'next/image';
-import { getMeal } from '@/lib/meals'
 import { notFound } from 'next/navigation';
 
-export default function MealDetailPage({ params }) {
+import { getMeal } from '@/lib/meals';
+import classes from './page.module.css';
+
+export async function generateMetadata({ params }) {
   const meal = getMeal(params.mealSlug);
 
   if (!meal) {
     notFound();
   }
 
-  meal.instructions = meal.instructions.replace(/\n/g, '<br/>');
+  return {
+    title: meal.title,
+    description: meal.summary,
+  };
+}
+
+export default function MealDetailsPage({ params }) {
+  const meal = getMeal(params.mealSlug);
+
+  if (!meal) {
+    notFound();
+  }
+
+  meal.instructions = meal.instructions.replace(/\n/g, '<br />');
 
   return (
     <>
-      <header className={styles.header}>
-        <div className={styles.image}>
-          <Image src={meal.image} alt={meal.title} fill />
+      <header className={classes.header}>
+        <div className={classes.image}>
+          <Image
+            src={`https://kimsoyeon-meal.s3.ap-southeast-2.amazonaws.com/${meal.image}`}
+            alt={meal.title}
+            fill
+          />
         </div>
-        <div className={styles.headerText}>
+        <div className={classes.headerText}>
           <h1>{meal.title}</h1>
-          <p className={styles.creator}>
+          <p className={classes.creator}>
             by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
           </p>
-          <p className={styles.summary}>{meal.summary}</p>
+          <p className={classes.summary}>{meal.summary}</p>
         </div>
       </header>
-
       <main>
-        <p 
-          className={styles.instructions} 
+        <p
+          className={classes.instructions}
           dangerouslySetInnerHTML={{
             __html: meal.instructions,
           }}

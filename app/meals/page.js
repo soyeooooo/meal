@@ -1,38 +1,41 @@
-import styles from "./page.module.css";
-import Link from 'next/link'; 
-import MealGrid from "../_component/meals/meals_grid";
-import { getMeals } from '@/lib/meals';
-import { Suspense } from "react";
+import { Suspense } from 'react';
+import Link from 'next/link';
 
-async function Meals(){
+import classes from './page.module.css';
+import MealsGrid from '@/components/meals/meals-grid';
+import { getMeals } from '@/lib/meals';
+
+export const metadata = {
+  title: 'All Meals',
+  description: 'Browse the delicious meals shared by our vibrant community.',
+};
+
+async function Meals() {
+  console.log('Fetching meals');
   const meals = await getMeals();
 
-  return         <MealGrid meals={meals}></MealGrid>
-
-
+  return <MealsGrid meals={meals} />;
 }
 
-export default  function MealPage() {
-
-
+export default function MealsPage() {
   return (
     <>
-      <header className={styles.header}>
+      <header className={classes.header}>
         <h1>
-          Delicious meal, created <span className={styles.highlight}>by you</span>
+          Delicious meals, created{' '}
+          <span className={classes.highlight}>by you</span>
         </h1>
-        <p>얌얌 너무맛있는 레시피 너가 요리해봐라 그건 간단하고 재밋음</p>
-        <p className={styles.cta}>
-          <Link href="/meals/share">너의 최애 레시피 공유</Link>
+        <p>
+          Choose your favorite recipe and cook it yourself. It is easy and fun!
+        </p>
+        <p className={classes.cta}>
+          <Link href="/meals/share">Share Your Favorite Recipe</Link>
         </p>
       </header>
-      <main className={styles.main}>
-      <Suspense fallback={<p className={styles.loading}>로딩중</p>}>
-  <Meals></Meals>
-</Suspense>
-
-
-
+      <main className={classes.main}>
+        <Suspense fallback={<p className={classes.loading}>Fetching meals...</p>}>
+          <Meals />
+        </Suspense>
       </main>
     </>
   );
