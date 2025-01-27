@@ -17,6 +17,14 @@ export async function generateMetadata({ params }) {
   };
 }
 
+export async function generateMetadata({ params }) {
+  const meal = getMeal(params.mealSlug);
+  return {
+    title :meal.title,
+    description:meal.summary,
+  };
+}
+
 export default function MealDetailsPage({ params }) {
   const meal = getMeal(params.mealSlug);
 
